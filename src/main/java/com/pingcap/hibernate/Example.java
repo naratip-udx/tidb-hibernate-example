@@ -35,7 +35,7 @@ import java.util.List;
 
 public class Example {
 
-	public static enum Gender {
+	public enum Gender {
 		MALE, FEMALE
 	}
 
@@ -46,7 +46,7 @@ public class Example {
 	public static class User {
 		/** The id. */
 		@Id
-		@GeneratedValue(strategy=GenerationType.IDENTITY)
+		@GeneratedValue(strategy = GenerationType.IDENTITY)
 		private int userId;
 
 		private String name;
@@ -85,7 +85,7 @@ public class Example {
 	public static class Order {
 		/** The order id. */
 		@Id
-		@GeneratedValue(strategy=GenerationType.IDENTITY)
+		@GeneratedValue(strategy = GenerationType.IDENTITY)
 		private int orderId;
 
 		/** The user id related to this order. */
@@ -129,8 +129,7 @@ public class Example {
 	 * @param args the arguments
 	 */
 	public static void main(String[] args) {
-		Session session = openSession();
-		try {
+		try (Session session = openSession()) {
 			User tom = new User("Tom", Gender.MALE);
 			persist(session, tom);
 
@@ -154,10 +153,8 @@ public class Example {
 			List list = query.list();
 			Iterator it = list.iterator();
 			while (it.hasNext()) {
-				System.out.println("User name: " + (String) it.next());
+				System.out.println("User name: " + it.next());
 			}
-		} finally {
-			session.close();
 		}
 	}
 	
@@ -196,10 +193,10 @@ public class Example {
 	private static Session openSession() {
 		if (sessionFactory == null) {
 			final Configuration configuration = new Configuration();
-			configuration.addAnnotatedClass( User.class );
-			configuration.addAnnotatedClass( Order.class );
+			configuration.addAnnotatedClass(User.class);
+			configuration.addAnnotatedClass(Order.class);
 
-			sessionFactory = configuration.buildSessionFactory( new StandardServiceRegistryBuilder().build() );
+			sessionFactory = configuration.buildSessionFactory(new StandardServiceRegistryBuilder().build());
 		}
 		return sessionFactory.openSession();
 	}
